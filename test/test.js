@@ -7,5 +7,5 @@ PalettoTestCase.prototype.testStory1 = function () {
 
     moteur.nouvelle_partie();
 
-    assertTrue(juxtaposition_ok() === true);
+    assertTrue(moteur.juxtaposition_ok() === true);
 };
