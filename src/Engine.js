@@ -5,6 +5,7 @@ var Engine = function () {
     // private attributes and methods
     var taillePlateau = 6;
     var plateau = new Array(taillePlateau);
+    var tourJoueur;
 
     var noir = "noir";
     var vert = "vert";
@@ -12,6 +13,10 @@ var Engine = function () {
     var bleu = "bleu";
     var rouge = "rouge";
     var jaune = "jaune";
+    var couleurs = [noir, vert, blanc, bleu, rouge, jaune];
+
+    var piecesJoueur1 = {};
+    var piecesJoueur2 = {};
 
     this.nouvelle_partie = function () {
         var i;
@@ -61,28 +66,34 @@ var Engine = function () {
         plateau[5][3] = rouge;
         plateau[5][4] = vert;
         plateau[5][5] = noir;
+
+        for (i = 0; i < couleurs.length; i++) {
+            piecesJoueur1[couleurs[i]] = 0;
+            piecesJoueur2[couleurs[i]] = 0;
+        }
+
+        tourJoueur = 1;
     };
 
     this.juxtaposition_ok = function () {
-        var colonne;
-        var ligne;
-        var billeActuelle;
+        var ligne, colonne;
+        var pieceActuelle;
 
         for (ligne = 0; ligne < taillePlateau; ligne++) {
             for (colonne = 0; colonne < taillePlateau; colonne++) {
-                billeActuelle = plateau[ligne][colonne];
+                pieceActuelle = plateau[ligne][colonne];
 
                 if (!(ligne === 0))
-                    if (billeActuelle === plateau[ligne - 1][colonne])
+                    if (pieceActuelle === plateau[ligne - 1][colonne])
                         return false;
                 if (!(colonne === taillePlateau - 1))
-                    if (billeActuelle === plateau[ligne][colonne + 1])
+                    if (pieceActuelle === plateau[ligne][colonne + 1])
                         return false;
                 if (!(ligne === taillePlateau - 1))
-                    if (billeActuelle === plateau[ligne + 1][colonne])
+                    if (pieceActuelle === plateau[ligne + 1][colonne])
                         return false;
                 if (!(colonne === 0))
-                    if (billeActuelle === plateau[ligne][colonne - 1])
+                    if (pieceActuelle === plateau[ligne][colonne - 1])
                         return false;
             }
         }
@@ -98,7 +109,47 @@ var Engine = function () {
             return true;
         else
             return false;
-    }
+    };
+
+    this.retirer_piece = function (coords) {
+        var colonne = coords.charCodeAt(0) - 65;
+        var ligne = coords.charCodeAt(1) - 49;
+        var piece = plateau[ligne][colonne];
+
+        if (piece != null)
+            if (tourJoueur === 1)
+                piecesJoueur1[piece]++;
+            else if (tourJoueur === 2)
+                piecesJoueur2[piece]++;
+
+        plateau[ligne][colonne] = null;
+    };
+
+    this.get_nombre_pieces = function () {
+        var ligne, colonne;
+        var pieceActuelle;
+        var compt = 0;
+
+        for (ligne = 0; ligne < taillePlateau; ligne++) {
+            for (colonne = 0; colonne < taillePlateau; colonne++) {
+                pieceActuelle = plateau[ligne][colonne];
+
+                if (pieceActuelle != null)
+                    compt++;
+            }
+        }
+
+        return compt;
+    };
+
+    this.get_pieces_joueur = function (numeroJoueur) {
+        if (numeroJoueur === 1)
+            return piecesJoueur1;
+        else if (numeroJoueur === 2)
+            return piecesJoueur2;
+    };
+
+    
 
     // public methods
 };
