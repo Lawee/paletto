@@ -90,6 +90,15 @@ var Engine = function () {
         return true;
     };
 
+    this.est_dans_un_coin = function (couleur) {
+        if (plateau[0][0] === couleur
+        || plateau[0][taillePlateau - 1] === couleur
+        || plateau[taillePlateau -1][0] === couleur
+        || plateau[taillePlateau -1][taillePlateau -1] === couleur)
+            return true;
+        else
+            return false;
+    }
 
     // public methods
 };
