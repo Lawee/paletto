@@ -54,3 +54,17 @@ PalettoTestCase.prototype.testStory4 = function () {
     var piecesJoueur2 = moteur.get_pieces_joueur(2);
     assertTrue(piecesJoueur2["noir"] === 2);
 };
+
+PalettoTestCase.prototype.testStory5 = function () {
+    var moteur = new Engine();
+
+    moteur.nouvelle_partie_etat_intermediaire();
+
+    assertTrue(moteur.peut_retirer_piece("D1"));
+    assertTrue(moteur.peut_retirer_piece("F1"));
+    assertTrue(moteur.peut_retirer_piece("E3"));
+    assertTrue(moteur.peut_retirer_piece("A4"));
+    assertTrue(moteur.peut_retirer_piece("B5"));
+    assertTrue(moteur.peut_retirer_piece("C6"));
+    assertFalse(moteur.peut_retirer_piece("C3"));
+};
