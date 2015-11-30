@@ -112,17 +112,19 @@ var Engine = function () {
     };
 
     this.retirer_piece = function (coords) {
-        var colonne = coords.charCodeAt(0) - 65;
-        var ligne = coords.charCodeAt(1) - 49;
-        var piece = plateau[ligne][colonne];
+        if (this.peut_retirer_piece(coords)) {
+            var colonne = coords.charCodeAt(0) - 65;
+            var ligne = coords.charCodeAt(1) - 49;
+            var piece = plateau[ligne][colonne];
 
-        if (piece != null)
-            if (tourJoueur === 1)
-                piecesJoueur1[piece]++;
-            else if (tourJoueur === 2)
-                piecesJoueur2[piece]++;
+            if (piece != null)
+                if (tourJoueur === 1)
+                    piecesJoueur1[piece]++;
+                else if (tourJoueur === 2)
+                    piecesJoueur2[piece]++;
 
-        plateau[ligne][colonne] = null;
+            plateau[ligne][colonne] = null;
+        }
     };
 
     this.get_nombre_pieces = function () {
@@ -149,7 +151,36 @@ var Engine = function () {
             return piecesJoueur2;
     };
 
-    
+    this.peut_retirer_piece = function (coords) {
+        var colonne = coords.charCodeAt(0) - 65;
+        var ligne = coords.charCodeAt(1) - 49;
+        var piece = plateau[ligne][colonne];
+
+        var ok = true;
+        var compt = 0;
+
+        if (!(ligne === 0))
+            if (plateau[ligne - 1][colonne] != null)
+                compt++;
+        if (!(colonne === taillePlateau - 1))
+            if (plateau[ligne][colonne + 1] != null)
+                compt++;
+        if (!(ligne === taillePlateau - 1))
+            if (plateau[ligne + 1][colonne] != null)
+                compt++;
+        if (!(colonne === 0))
+            if (plateau[ligne][colonne - 1] != null)
+                compt++;
+
+        if (compt > 2) ok = false;
+
+        return ok;
+    };
+
+    this.change_tour_joueur = function () {
+        if (tourJoueur === 1) tourJoueur = 2;
+        else tourJoueur = 1;
+    };
 
     // public methods
 };
