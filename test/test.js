@@ -20,7 +20,7 @@ PalettoTestCase.prototype.testStory2 = function () {
     assertTrue(moteur.est_dans_un_coin("jaune") === true);
 };
 
-PalettoTestCase.prototype.testStory2 = function () {
+PalettoTestCase.prototype.testStory3 = function () {
     var moteur = new Engine();
 
     moteur.nouvelle_partie();
@@ -31,4 +31,26 @@ PalettoTestCase.prototype.testStory2 = function () {
 
     var piecesJoueur1 = moteur.get_pieces_joueur(1);
     assertTrue(piecesJoueur1["jaune"] === 1);
+};
+
+PalettoTestCase.prototype.testStory4 = function () {
+    var moteur = new Engine();
+
+    moteur.nouvelle_partie();
+
+    moteur.retirer_piece("A6");
+
+    moteur.change_tour_joueur();
+
+    assertTrue(moteur.peut_retirer_piece("A1"));
+    assertTrue(moteur.peut_retirer_piece("F1"));
+    assertTrue(moteur.peut_retirer_piece("A5"));
+    assertTrue(moteur.peut_retirer_piece("B6"));
+    assertTrue(moteur.peut_retirer_piece("F6"));
+
+    moteur.retirer_piece("A1");
+    moteur.retirer_piece("F6");
+
+    var piecesJoueur2 = moteur.get_pieces_joueur(2);
+    assertTrue(piecesJoueur2["noir"] === 2);
 };
