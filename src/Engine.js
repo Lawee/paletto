@@ -103,9 +103,9 @@ var Engine = function () {
 
     this.est_dans_un_coin = function (couleur) {
         if (plateau[0][0] === couleur
-        || plateau[0][taillePlateau - 1] === couleur
-        || plateau[taillePlateau -1][0] === couleur
-        || plateau[taillePlateau -1][taillePlateau -1] === couleur)
+            || plateau[0][taillePlateau - 1] === couleur
+            || plateau[taillePlateau -1][0] === couleur
+            || plateau[taillePlateau -1][taillePlateau -1] === couleur)
             return true;
         else
             return false;
@@ -155,8 +155,49 @@ var Engine = function () {
         var colonne = coords.charCodeAt(0) - 65;
         var ligne = coords.charCodeAt(1) - 49;
         var piece = plateau[ligne][colonne];
+        if (piece == null) return false;
 
-        var ok = true;
+        var nbVoisins = this.compte_voisins(ligne, colonne);
+
+        if (nbVoisins > 2) return false;
+
+        if (nbVoisins === 2) {
+            //left right - up down
+            if ((!(colonne === 0) && !(colonne === taillePlateau - 1)) && (!(ligne === 0) && !(ligne === taillePlateau - 1)))
+                if ((plateau[ligne][colonne - 1] != null && plateau[ligne][colonne + 1] != null)
+                    || (plateau[ligne - 1][colonne] != null && plateau[ligne + 1][colonne] != null))
+                    return false;
+
+            //up right
+            if (colonne !== taillePlateau - 1 && ligne !== 0)
+                if (plateau[ligne - 1][colonne] != null && plateau[ligne][colonne + 1] != null && plateau[ligne - 1][colonne + 1] == null)
+                    return false;
+
+            //down right
+            if (colonne !== taillePlateau -1 && ligne !== taillePlateau -1)
+                if (plateau[ligne + 1][colonne] != null && plateau[ligne][colonne + 1] != null && plateau[ligne + 1][colonne + 1] == null)
+                    return false;
+
+            //down left
+            if (colonne !== 0 && ligne !== taillePlateau -1)
+                if (plateau[ligne + 1][colonne] != null && plateau[ligne][colonne - 1] != null && plateau[ligne + 1][colonne - 1] == null)
+                    return false;
+
+            //up left
+            if (colonne !== 0 && ligne !== 0)
+                if (plateau[ligne][colonne - 1] != null && plateau[ligne - 1][colonne] != null && plateau[ligne - 1][colonne - 1] == null)
+                    return false;
+        }
+
+        return true;
+    };
+
+    this.change_tour_joueur = function () {
+        if (tourJoueur === 1) tourJoueur = 2;
+        else tourJoueur = 1;
+    };
+
+    this.compte_voisins = function (ligne, colonne) {
         var compt = 0;
 
         if (!(ligne === 0))
@@ -172,14 +213,31 @@ var Engine = function () {
             if (plateau[ligne][colonne - 1] != null)
                 compt++;
 
-        if (compt > 2) ok = false;
-
-        return ok;
+        return compt;
     };
 
-    this.change_tour_joueur = function () {
-        if (tourJoueur === 1) tourJoueur = 2;
-        else tourJoueur = 1;
+    this.nouvelle_partie_etat_intermediaire = function () {
+        var i;
+
+        for (i = 0; i < taillePlateau ; i++) {
+            plateau[i] = new Array(taillePlateau);
+        }
+
+        plateau = [
+            [null, null, null, bleu, rouge, blanc],
+            [null, null, null, rouge, jaune, null],
+            [null, null, bleu, blanc, noir, null],
+            [rouge, noir, rouge, null, null, null],
+            [null, vert, jaune, null, null, null],
+            [null, null, noir, null, null, null]
+        ];
+
+        for (i = 0; i < couleurs.length; i++) {
+            piecesJoueur1[couleurs[i]] = 0;
+            piecesJoueur2[couleurs[i]] = 0;
+        }
+
+        tourJoueur = 1;
     };
 
     // public methods
